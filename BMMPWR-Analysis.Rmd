@@ -1,0 +1,274 @@
+---
+title: 'Background Music, Music Preference, and Word Recall Analysis'
+author: 'Caiden Nimchuk'
+date: '2024-11-01'
+output: github_document
+---
+
+```{r, message = FALSE, warning = FALSE}
+library(ggthemes)
+library(knitr)
+library(pander)
+library(rstatix)
+library(tidyverse)
+
+panderOptions('table.style', 'rmarkdown')
+options(dplyr.summarise.inform = FALSE)
+options(digits = 3)
+
+theme_set(theme_stata(scheme = 's1mono'))
+theme_update(legend.position = 'none')
+theme_update(axis.title = element_text(face = "bold"))
+
+scale_colour_discrete <- function() {
+  scale_color_tableau()
+}
+
+scale_fill_discrete <- function() {
+  scale_fill_tableau()
+}
+
+scale_x_int <- function(n) {
+  scale_x_continuous(breaks = function(limits) {
+    seq(from = 0, to = ceiling(limits[2]), by = n)
+  })
+}
+
+scale_y_int <- function(n) {
+  scale_y_continuous(breaks = function(limits) {
+    seq(from = 0, to = ceiling(limits[2]), by = n)
+  })
+}
+
+
+bmmpwr_data <- read_csv('BMMPWR-Clean-Data.csv', show_col_types = FALSE)
+```
+
+# Demographic information
+
+## Gender
+
+```{r, warning=FALSE}
+gender_freq <-
+  bmmpwr_data %>%
+  count(Gender)
+
+pander(gender_freq)
+
+gender_freq_plot <-
+  bmmpwr_data %>%
+    ggplot(aes(x = Gender, fill = TRUE)) +
+    geom_bar() +
+    scale_y_int(4) +
+    ylab('Count')
+
+gender_freq_plot
+```
+
+## Race or ethnicity
+
+```{r}
+race_freq <-
+  bmmpwr_data %>%
+  count(`Race or ethnicity`) %>%
+  slice(1:4, 6, 5)
+
+pander(race_freq)
+
+race_freq_plot <-
+  race_freq %>%
+    mutate(`Race or ethnicity` = recode(`Race or ethnicity`, 
+                                        `Black or African American` = 'Black', 
+                                        `Middle Eastern or North African` = 'MENA descent',
+                                        `Multiracial or multiethnic` = 'Multiple')) %>%
+    ggplot(aes(x = reorder(`Race or ethnicity`, -n), y = n, fill = TRUE)) +
+    geom_bar(stat = 'identity') +
+    scale_y_int(4) +
+    xlab('Race or ethnicity') +
+    ylab('Count')
+
+race_freq_plot
+```
+
+## Age
+
+```{r}
+age_summ <-
+  bmmpwr_data %>%
+  summarize(Median = median(Age),
+            Mean = mean(Age),
+            SD = sd(Age),
+            Min = min(Age),
+            Max = max(Age))
+
+pander(age_summ)
+
+age_plot <-
+  bmmpwr_data %>%
+    ggplot(aes(x = Age, fill = TRUE)) +
+    geom_histogram(binwidth = 1) +
+    scale_x_int(1) +
+    scale_y_int(2) +
+    ylab('Count')
+
+age_plot
+```
+
+# Score distributions
+
+## Score distributions by gender
+
+```{r}
+gender_dist <-
+  bmmpwr_data %>%
+  group_by(Gender) %>%
+  summarize(Count = n(),
+            Median = median(Score),
+            Mean = mean(Score),
+            SD = sd(Score))
+
+pander(gender_dist)
+
+gender_dist_plot <-
+  gender_dist %>%
+    mutate(replace_na(0)) %>%
+    mutate(ci = suppressWarnings(qt(p = 0.025, df = Count-1)) * (SD / sqrt(Count))) %>%
+    ggplot(aes(x = Gender, y = Mean, fill = TRUE)) +
+    geom_bar(stat = 'identity') +
+    geom_errorbar(aes(ymin = Mean - ci, ymax = Mean + ci)) +
+    scale_y_int(2) +
+    ylab('Mean Score')
+
+gender_dist_plot
+```
+
+## Score distributions between groups
+
+```{r}
+cond_dist <-
+  bmmpwr_data %>%
+  group_by(Condition) %>%
+  summarize(Count = n(),
+            Median = median(Score),
+            Mean = mean(Score),
+            SD = sd(Score))
+
+pander(cond_dist)
+
+cond_dist_plot <-
+  cond_dist %>%
+    mutate(ci = qt(p = 0.025, df = Count-1) * (SD / sqrt(Count))) %>%
+    ggplot(aes(x = Condition, y = Mean, fill = TRUE)) +
+    geom_bar(stat = 'identity') +
+    geom_errorbar(aes(ymin = Mean - ci, ymax = Mean + ci)) +
+    scale_y_int(2) +
+    ylab('Mean Score')
+
+cond_dist_plot
+```
+
+```{r}
+pref_dist <-
+  bmmpwr_data %>%
+  group_by(Preference) %>%
+  summarize(Count = n(),
+            Median = median(Score),
+            Mean = mean(Score),
+            SD = sd(Score))
+
+pander(pref_dist)
+
+pref_dist_plot <-
+  pref_dist %>%
+    mutate(ci = qt(p = 0.025, df = Count-1) * (SD / sqrt(Count))) %>%
+    ggplot(aes(x = Preference, y = Mean, fill = TRUE)) +
+    geom_bar(stat = 'identity') +
+    geom_errorbar(aes(ymin = Mean - ci, ymax = Mean + ci)) +
+    scale_y_int(2) +
+    ylab('Mean Score')
+
+pref_dist_plot
+```
+
+## Score distributions within groups
+
+```{r}
+within_dists <-
+  bmmpwr_data %>%
+  group_by(Condition, Preference) %>%
+  summarize(Count = n(),
+            Median = median(Score),
+            Mean = mean(Score),
+            SD = sd(Score))
+
+pander(within_dists)
+
+within_dists_plot <-
+  within_dists %>%
+    mutate(ci = qt(p = 0.025, df = Count-1) * (SD / sqrt(Count))) %>%
+    ggplot(aes(x = Condition, y = Mean, group = Preference, fill = Preference)) +
+    geom_bar(position = "dodge", stat = "identity") +
+    geom_errorbar(position = "dodge", aes(ymin = Mean - ci, ymax = Mean + ci)) +
+    scale_y_int(2) +
+    ylab('Mean Score')
+
+within_dists_plot
+```
+
+# Tests
+
+## Gender effect t-test
+
+```{r}
+gender_t <-
+  bmmpwr_data %>%
+  filter(Gender != 'Other') %>%
+  t_test(Score ~ Gender,
+         alternative = 'greater') %>%
+  rename('Group 1' = group1,
+         'Group 2' = group2,
+         'Variable' = .y.,
+         'Statistic' = statistic)
+
+pander(gender_t)
+```
+
+## Condition effect t-test
+
+```{r}
+cond_t <-
+  bmmpwr_data %>%
+  t_test(Score ~ Condition,
+         alternative = 'less') %>%
+  rename('Condition 1' = group1,
+         'Condition 2' = group2,
+         'Variable' = .y.,
+         'Statistic' = statistic)
+
+pander(cond_t)
+```
+
+## ANOVA test
+
+```{r}
+cond_pref_anova <-
+  bmmpwr_data %>%
+  anova_test(Score ~ Condition * Preference, type = 3, detailed = TRUE) %>%
+  as_tibble() %>%
+  select(-`p<.05`, -ges) %>%
+  filter(Effect != "(Intercept)")
+
+pander(cond_pref_anova)
+
+cond_pref_anova_plot <-
+
+within_dists %>%
+  mutate(ci = qt(p = 0.025, df = Count-1) * (SD / sqrt(Count))) %>%
+  ggplot(aes(x = Condition, y = Mean, group = Preference, color = Preference, fill = Preference)) +
+  geom_ribbon(aes(ymin = Mean - ci, ymax = Mean + ci), alpha = 0.4, color = NA) +
+  geom_line() + 
+  geom_point() +
+  scale_y_int(1)
+
+cond_pref_anova_plot
+```

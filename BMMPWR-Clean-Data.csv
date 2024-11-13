@@ -1,0 +1,36 @@
+Response ID,Age,Gender,Race or ethnicity,Condition,Preference,Score
+R_6WZGPJ7mSXfOTn3,21,Male,White,Music,Music,5
+R_6H82j0yKyu4aToW,20,Male,White,No music,Music,6
+R_1ZOd7XkMydfstSu,19,Female,Asian,Music,No music,5
+R_5QTRJKw5flHKWnT,19,Female,White,Music,No music,5
+R_3sh7KJ65NYqONY3,23,Other,Black or African American,No music,No music,8
+R_6PbG2pzp2Pnpfzc,21,Female,Middle Eastern or North African,No music,No music,8
+R_18zDUN0KpBXabVo,19,Female,Multiracial or multiethnic,Music,No music,7
+R_5HYLGRmyDMEZtPm,19,Female,Asian,No music,Music,8
+R_7lhM6aBpDL3g361,20,Male,Multiracial or multiethnic,Music,No music,10
+R_3T63ncB2tup3nKp,21,Female,White,No music,Music,4
+R_5e7YLtX5DOWtwqY,18,Female,White,Music,No music,7
+R_7Moo2h07V0afZkc,18,Female,Black or African American,No music,Music,8
+R_5F3ZO2virHUbmEU,18,Female,Asian,Music,No music,4
+R_1ewRClDSzDYyaMl,16,Female,Prefer not to say,Music,No music,11
+R_7Oqy504xe2Ryie3,16,Female,Middle Eastern or North African,Music,No music,16
+R_3GlARMDfHQg4QF7,18,Female,White,No music,No music,8
+R_3p2UmOaDHOfCTuX,18,Male,White,Music,Music,9
+R_3GvqvZjLEzYbSlN,19,Female,White,No music,No music,6
+R_11mUAKur8WTjFXc,19,Female,White,No music,Music,7
+R_6IcQ2yupdLnkZwy,20,Female,White,No music,No music,7
+R_35XUfy8x5gmUEtS,25,Male,White,Music,No music,8
+R_3LMsWo5cskxSaV3,18,Female,Black or African American,No music,No music,12
+R_5z5eHEjLXKdxYGJ,21,Female,White,No music,Music,7
+R_1xBLWHZSKnFJ4nD,18,Female,White,Music,No music,6
+R_6ib7QFZCZMb1OR8,19,Female,Black or African American,No music,No music,8
+R_6HBmUywyYRHAI3T,21,Female,White,No music,No music,9
+R_5KYLXoEe6OZA4Ko,19,Male,White,No music,No music,12
+R_1QgqKS01YinXScE,19,Female,Multiracial or multiethnic,Music,No music,8
+R_1lAzbQpkCg2xIIX,18,Female,Asian,No music,Music,7
+R_6pxtiRLmzNUJhnO,19,Female,Asian,Music,No music,13
+R_3cXQTu4rHA3n2FC,18,Female,White,No music,No music,4
+R_5QlcI4nBHz1tolx,20,Male,White,Music,No music,2
+R_5DAVXQ3mRGSzNdH,21,Male,White,No music,No music,5
+R_332fuAPMb7r1DLb,20,Female,White,Music,Music,6
+R_7hYGjAr6DigZiJv,17,Female,Asian,Music,Music,9
