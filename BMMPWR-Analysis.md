@@ -14,9 +14,10 @@ panderOptions('table.style', 'rmarkdown')
 options(dplyr.summarise.inform = FALSE)
 options(digits = 3)
 
-theme_set(theme_stata(scheme = 's2mono'))
-theme_update(legend.position = 'none')
-theme_update(axis.title = element_text(face = "bold"))
+theme_set(theme_stata(scheme = 's1mono'))
+theme_update(legend.position = 'none',
+             legend.title = element_text(size = 10, face = "bold"),
+             axis.title = element_text(face = "bold"))
 
 scale_colour_discrete <- function() {
   scale_color_tableau()
@@ -102,6 +103,7 @@ race_freq_plot <-
                                         `Multiracial or multiethnic` = 'Multiple')) %>%
     ggplot(aes(x = reorder(`Race or ethnicity`, -n), y = n, fill = TRUE)) +
     geom_bar(stat = 'identity') +
+    theme(axis.text.x = element_text(angle = 22.5, vjust = 0.75)) +
     scale_y_int(4) +
     xlab('Race or ethnicity') +
     ylab('Count')
@@ -276,6 +278,7 @@ within_dists_plot <-
     geom_bar(position = "dodge", stat = "identity") +
     geom_errorbar(position = "dodge", aes(ymin = Mean - ci, ymax = Mean + ci)) +
     scale_y_int(2) +
+    theme(legend.position = "bottom") +
     ylab('Mean Score')
 
 within_dists_plot
@@ -316,7 +319,6 @@ cond_t <-
          'Condition 2' = group2,
          'Variable' = .y.,
          'Statistic' = statistic)
-
 pander(cond_t)
 ```
 
@@ -352,7 +354,8 @@ within_dists %>%
   geom_ribbon(aes(ymin = Mean - ci, ymax = Mean + ci), alpha = 0.4, color = NA) +
   geom_line() + 
   geom_point() +
-  scale_y_int(1)
+  scale_y_int(1) +
+  theme(legend.position = "bottom")
 
 cond_pref_anova_plot
 ```
