@@ -2,9 +2,7 @@
 title: 'Background Music, Music Preference, and Word Recall Analysis'
 author: 'Caiden Nimchuk'
 date: '2024-11-01'
-output:
-  html_document:
-    code_folding: hide
+output: github_document
 ---
 
 ```{r, message = FALSE, warning = FALSE}
